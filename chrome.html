@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Chrome Setup</title>
+
+<head>
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+
+<body>
+<script src="assets/app.js"></script>
+</head>
+
+<body>
+
+<h1>Chrome Setup</h1>
+
+<div style="font-family: monospace; max-width: 700px;">
+
+  <!-- Step 1 -->
+  <div style="margin-bottom: 20px; position: relative;">
+    <b>1. Add Google’s signing key</b>
+    <pre id="code1" style="background:#f5f5f5; padding:10px; border-radius:6px;">
+wget -qO - https://dl.google.com/linux/linux_signing_key.pub | sudo gpg --dearmor -o /usr/share/keyrings/google-chrome.gpg
+    </pre>
+    <button onclick="copyCode('code1', this)" style="position:absolute; top:0; right:0;">Copy</button>
+  </div>
+
+  <!-- Step 2 -->
+  <div style="margin-bottom: 20px; position: relative;">
+    <b>2. Add the Chrome repository</b>
+    <pre id="code2" style="background:#f5f5f5; padding:10px; border-radius:6px;">
+echo "deb [arch=amd64 signed-by=/usr/share/keyrings/google-chrome.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | sudo tee /etc/apt/sources.list.d/google-chrome.list
+    </pre>
+    <button onclick="copyCode('code2', this)" style="position:absolute; top:0; right:0;">Copy</button>
+  </div>
+
+  <!-- Step 3 -->
+  <div style="margin-bottom: 20px; position: relative;">
+    <b>3. Update package lists</b>
+    <pre id="code3" style="background:#f5f5f5; padding:10px; border-radius:6px;">
+sudo apt update
+    </pre>
+    <button onclick="copyCode('code3', this)" style="position:absolute; top:0; right:0;">Copy</button>
+  </div>
+
+  <!-- Step 4 -->
+  <div style="margin-bottom: 20px; position: relative;">
+    <b>4. Install Chrome</b>
+    <pre id="code4" style="background:#f5f5f5; padding:10px; border-radius:6px;">
+sudo apt install google-chrome-stable
+    </pre>
+    <button onclick="copyCode('code4', this)" style="position:absolute; top:0; right:0;">Copy</button>
+  </div>
+
+  <!-- Step 5 -->
+  <div style="margin-bottom: 20px; position: relative;">
+    <b>5. Verify installation</b>
+    <pre id="code5" style="background:#f5f5f5; padding:10px; border-radius:6px;">
+google-chrome --version
+    </pre>
+    <button onclick="copyCode('code5', this)" style="position:absolute; top:0; right:0;">Copy</button>
+  </div>
+
+</div>
+<h1>Configuration</h1>
+<ul>
+  <li>Log in with Google account</li>
+  <li>Turn on sync</li>
+  <li>Pin to start, place Chrome as second app</li>
+</ul>
+</body>
+</html>
