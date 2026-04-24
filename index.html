@@ -1,52 +1,70 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Linux Instructions</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Linux Instructions</title>
 
- <head>
-  <link rel="stylesheet" href="assets/style.css">
-</head>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
 
-<body>
-<script src="assets/app.js"></script>
-</head>
+  <body>
+    <h1>Linux Instructions</h1>
+    <p>Collection of setup guides and configuration notes.</p>
 
-<body>
+    <div class="card">
+      <a href="chrome.html">Chrome Setup</a>
+      <p>Install Google Chrome and configure it for use.</p>
+    </div>
 
-  <h1>Linux Instructions</h1>
-  <p>Collection of setup guides and configuration notes.</p>
+    <div class="card">
+      <h2>Remove unused applications</h2>
+      <li>Firefox.</li>
+    </div>
 
-  <div class="card">
-    <a href="chrome.html">Chrome Setup</a>
-    <p>Install Google Chrome and configure it for use.</p>
-  </div>
-
-  <div class="card">
-    <h2>Remove unused applications</h2>
-    <li>Firefox.</li>
-  </div>
-
-  <h2>Install applications</h2>
-  <!-- Step 7 -->
-  <div style="margin-bottom: 20px; position: relative;">
-    <b>Configure Git</b>
-    <pre id="code_aptinst" style="background:#f5f5f5; padding:10px; border-radius:6px;">
+    <h2>Install applications</h2>
+    <!-- Step 7 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>Configure Git</b>
+      <pre
+        id="code_aptinst"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
 sudo apt install git audacity util-linux-extra
-    </pre>
-    <button onclick="copyCode('code_aptinst', this)" style="position:absolute; top:0; right:0;">Copy</button>
-  </div>
+    </pre
+      >
+      <button
+        onclick="copyCode('code_aptinst', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
 
-  <div class="card">
-    <a href="esphome.html">ESPHome + Docker Setup</a>
-    <p>Install Docker, configure ESPHome, and flash ESP devices via USB.</p>
-  </div>
+    <div class="card">
+      <a href="esphome.html">ESPHome + Docker Setup</a>
+      <p>Install Docker, configure ESPHome, and flash ESP devices via USB.</p>
+    </div>
 
-  <div class="card">
-    <a href="vscode.html">Visual Studio Code Setup</a>
-    <p>Install Visual Studio Code and configure it for development.</p>
-  </div>
+    <div class="card">
+      <a href="vscode.html">Visual Studio Code Setup</a>
+      <p>Install Visual Studio Code and configure it for development.</p>
+    </div>
 
-</body>
+    <div class="card">
+      <a href="ssh_keys.html">SSH setup</a>
+      <p>Set up ssh access to my servers.</p>
+    </div>
+
+    <div class="card">
+      <a href="auto_updates.html">Automatic Updates</a>
+      <p>Set up automatic updates.</p>
+    </div>
+
+    <div class="card">
+      <a href="ha_vm.html">Home Assistant VM</a>
+      <p>Set up Home Assistant virtual machine</p>
+    </div>
+  </body>
 </html>
