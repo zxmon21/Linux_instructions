@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Automatic Updates Setup</title>
+
+    <link rel="stylesheet" href="assets/style.css" />
+  </head>
+
+  <body>
+    <script src="assets/app.js"></script>
+
+    <h1>Automatic Updates (Ubuntu)</h1>
+
+    <p>
+      Configure automatic security updates, optional full upgrades, and Docker image updates.
+    </p>
+
+    <!-- Step 1 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>1. Install unattended upgrades</b>
+      <pre id="code1" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+sudo apt update
+sudo apt install unattended-upgrades apt-listchanges
+  </pre
+      >
+      <button onclick="copyCode('code1', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 2 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>2. Enable automatic security updates</b>
+      <pre id="code2" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+sudo dpkg-reconfigure unattended-upgrades
+  </pre
+      >
+      <button onclick="copyCode('code2', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 3 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>3. Ensure automatic upgrades are active</b>
+      <pre id="code3" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+sudo nano /etc/apt/apt.conf.d/20auto-upgrades
+  </pre
+      >
+      <button onclick="copyCode('code3', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 4 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>4. Set config content</b>
+      <pre id="code4" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+  </pre
+      >
+      <button onclick="copyCode('code4', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <h2>Optional: Full system upgrades (weekly)</h2>
+
+    <!-- Step 5 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>5. Create systemd timer for full upgrades</b>
+      <pre id="code5" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+sudo nano /etc/systemd/system/full-upgrade.service
+  </pre
+      >
+      <button onclick="copyCode('code5', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 6 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>6. Service content</b>
+      <pre id="code6" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+[Unit]
+Description=Full system upgrade
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/apt update
+ExecStart=/usr/bin/apt -y full-upgrade
+ExecStart=/usr/bin/apt -y autoremove
+  </pre
+      >
+      <button onclick="copyCode('code6', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 7 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>7. Create timer</b>
+      <pre id="code7" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+sudo nano /etc/systemd/system/full-upgrade.timer
+  </pre
+      >
+      <button onclick="copyCode('code7', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 8 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>8. Timer schedule (weekly)</b>
+      <pre id="code8" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+[Unit]
+Description=Run full system upgrade weekly
+
+[Timer]
+OnCalendar=weekly
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+  </pre
+      >
+      <button onclick="copyCode('code8', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <!-- Step 9 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>9. Enable timer</b>
+      <pre id="code9" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+sudo systemctl daemon-reload
+sudo systemctl enable --now full-upgrade.timer
+  </pre
+      >
+      <button onclick="copyCode('code9', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+    <h2>Optional: Auto-update Docker containers (ESPHome etc.)</h2>
+
+    <!-- Step 10 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <b>10. Install Watchtower</b>
+      <pre id="code10" style="background: #f5f5f5; padding: 10px; border-radius: 6px">
+docker run -d \
+  --name watchtower \
+  --restart=unless-stopped \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  containrrr/watchtower \
+  --cleanup --interval 86400
+  </pre
+      >
+      <button onclick="copyCode('code10', this)" style="position: absolute; top: 0; right: 0">
+        Copy
+      </button>
+    </div>
+
+  </body>
+</html>
