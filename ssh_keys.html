@@ -12,148 +12,55 @@
     <script src="assets/app.js"></script>
 
     <h1>SSH Key Setup</h1>
+    <p>Configure key-based SSH login from your Ubuntu client (user: ticon367)</p>
 
-    <p>
-      Configure key-based SSH login from your Ubuntu client (user: ticon367)
-    </p>
+    <ol>
+      <li class="block">
+        <b>Generate SSH key</b>
+        <pre id="code1">ssh-keygen -t ed25519 -C "ticon367"</pre>
+        <button onclick="copyCode('code1', this)">Copy</button>
+      </li>
 
-    <!-- Step 1 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>1. Generate SSH key</b>
-      <pre
-        id="code1"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-ssh-keygen -t ed25519 -C "ticon367"
-  </pre
-      >
-      <button
-        onclick="copyCode('code1', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Start SSH agent and add key</b>
+        <pre id="code2">eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/id_ed25519</pre>
+        <button onclick="copyCode('code2', this)">Copy</button>
+      </li>
 
-    <!-- Step 2 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>2. Start SSH agent and add key</b>
-      <pre
-        id="code2"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-eval "$(ssh-agent -s)"
-ssh-add ~/.ssh/id_ed25519
-  </pre
-      >
-      <button
-        onclick="copyCode('code2', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Copy key to server 192.168.50.140 (port 2218)</b>
+        <pre id="code3">ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 2218 ticon367@192.168.50.140</pre>
+        <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
 
-    <!-- Step 3 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>3. Copy key to server 192.168.50.140 (port 2218)</b>
-      <pre
-        id="code3"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-ssh-copy-id -i ~/.ssh/id_ed25519.pub -p 2218 ticon367@192.168.50.140
-  </pre
-      >
-      <button
-        onclick="copyCode('code3', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Copy key to server 192.168.50.6 (port 22)</b>
+        <pre id="code4">ssh-copy-id -i ~/.ssh/id_ed25519.pub ticon367@192.168.50.6</pre>
+        <button onclick="copyCode('code4', this)">Copy</button>
+      </li>
 
-    <!-- Step 4 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>4. Copy key to server 192.168.50.6 (port 22)</b>
-      <pre
-        id="code4"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-ssh-copy-id -i ~/.ssh/id_ed25519.pub ticon367@192.168.50.6
-  </pre
-      >
-      <button
-        onclick="copyCode('code4', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Test SSH connection (server 140)</b>
+        <pre id="code5">ssh -p 2218 ticon367@192.168.50.140</pre>
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </li>
 
-    <!-- Step 5 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>5. Test SSH connection (server 140)</b>
-      <pre
-        id="code5"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-ssh -p 2218 ticon367@192.168.50.140
-  </pre
-      >
-      <button
-        onclick="copyCode('code5', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Test SSH connection (server 6)</b>
+        <pre id="code6">ssh ticon367@192.168.50.6</pre>
+        <button onclick="copyCode('code6', this)">Copy</button>
+      </li>
 
-    <!-- Step 6 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>6. Test SSH connection (server 6)</b>
-      <pre
-        id="code6"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-ssh ticon367@192.168.50.6
-  </pre
-      >
-      <button
-        onclick="copyCode('code6', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Create SSH config file</b>
+        <pre id="code7">nano ~/.ssh/config</pre>
+        <button onclick="copyCode('code7', this)">Copy</button>
+      </li>
 
-    <h2>Optional: SSH config shortcuts</h2>
-
-    <!-- Step 7 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>7. Create SSH config file</b>
-      <pre
-        id="code7"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-nano ~/.ssh/config
-  </pre
-      >
-      <button
-        onclick="copyCode('code7', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
-
-    <!-- Step 8 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>8. SSH config content</b>
-      <pre
-        id="code8"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-Host nas
+      <li class="block">
+        <b>SSH config content</b>
+        <pre id="code8">Host nas
     HostName 192.168.50.140
     User ticon367
     Port 2218
@@ -163,34 +70,65 @@ Host ha
     HostName 192.168.50.6
     User ticon367
     Port 22
-    IdentityFile ~/.ssh/id_ed25519
-  </pre
-      >
-      <button
-        onclick="copyCode('code8', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+    IdentityFile ~/.ssh/id_ed25519</pre>
+        <button onclick="copyCode('code8', this)">Copy</button>
+      </li>
 
-    <!-- Step 9 -->
-    <div style="margin-bottom: 20px; position: relative">
-      <b>9. Use shortcuts</b>
-      <pre
-        id="code9"
-        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
-      >
-ssh nas
-ssh ha
-  </pre
-      >
-      <button
-        onclick="copyCode('code9', this)"
-        style="position: absolute; top: 0; right: 0"
-      >
-        Copy
-      </button>
-    </div>
+      <li class="block">
+        <b>Use shortcuts</b>
+        <pre id="code9">ssh nas
+ssh ha</pre>
+        <button onclick="copyCode('code9', this)">Copy</button>
+      </li>
+    </ol>
+
+    <h1>Ubuntu SSH Server</h1>
+
+    <ol>
+      <li class="block">
+        <b>Install OpenSSH server</b>
+        <pre id="code10">sudo apt update
+sudo apt install openssh-server -y</pre>
+        <button onclick="copyCode('code10', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Enable and start SSH service</b>
+        <pre id="code11">sudo systemctl enable ssh
+sudo systemctl start ssh
+sudo systemctl status ssh</pre>
+        <button onclick="copyCode('code11', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Edit SSH server configuration</b>
+        <pre id="code12">sudo nano /etc/ssh/sshd_config</pre>
+        <button onclick="copyCode('code12', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Set secure authentication options</b>
+        <pre id="code13">PermitRootLogin no
+PasswordAuthentication no
+PubkeyAuthentication yes
+ChallengeResponseAuthentication no
+UsePAM yes
+AllowUsers ticon367</pre>
+        <button onclick="copyCode('code13', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Restart SSH service</b>
+        <pre id="code14">sudo systemctl restart ssh</pre>
+        <button onclick="copyCode('code14', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Allow SSH through firewall</b>
+        <pre id="code15">sudo ufw allow OpenSSH
+sudo ufw enable</pre>
+        <button onclick="copyCode('code15', this)">Copy</button>
+      </li>
+    </ol>
   </body>
 </html>
