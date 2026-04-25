@@ -1,34 +1,33 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>ESPHome Docker Setup</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>ESPHome Docker Setup</title>
 
-<head>
-  <link rel="stylesheet" href="assets/style.css">
-</head>
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
 
-<body>
-<script src="assets/app.js"></script>
-</head>
+  <body>
+    <ol>
+      <h1>ESPHome + Docker Setup</h1>
 
-<body>
+      <!-- Step 1 -->
+      <li class="block">
+        <b>Install prerequisites first</b>
+        <pre id="code1">
+sudo apt update
+sudo apt install ca-certificates curl gnupg</pre
+        >
+        <button onclick="copyCode('code1', this)">Copy</button>
+      </li>
 
-<h1>ESPHome + Docker Setup</h1>
-
-<!-- Step 1 -->
-<div class="block">
-  <b>1. Install prerequisites first</b>
-  <pre id="code1">sudo apt update
-sudo apt install ca-certificates curl gnupg</pre>
-  <button onclick="copyCode('code1', this)">Copy</button>
-</div>
-
-<!-- Step 2 -->
-<div class="block">
-  <b>2. Add Docker repo + install Docker</b>
-  <pre id="code2">sudo install -m 0755 -d /etc/apt/keyrings
+      <!-- Step 2 -->
+      <li class="block">
+        <b>Add Docker repo + install Docker</b>
+        <pre id="code2">
+sudo install -m 0755 -d /etc/apt/keyrings
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 
@@ -38,51 +37,64 @@ $(. /etc/os-release && echo $VERSION_CODENAME) stable" | \
 sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 
 sudo apt update
-sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</pre>
-  <button onclick="copyCode('code2', this)">Copy</button>
-</div>
+sudo apt install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin</pre
+        >
+        <button onclick="copyCode('code2', this)">Copy</button>
+      </li>
 
-<!-- Step 3 -->
-<div class="block">
-  <b>3. (Optional) Run Docker without sudo</b>
-  <pre id="code3">sudo usermod -aG docker $USER
-newgrp docker</pre>
-  <button onclick="copyCode('code3', this)">Copy</button>
-</div>
+      <!-- Step 3 -->
+      <li class="block">
+        <b>(Optional) Run Docker without sudo</b>
+        <pre id="code3">
+sudo usermod -aG docker $USER
+newgrp docker</pre
+        >
+        <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
 
-<!-- Step 4 -->
-<div class="block">
-  <b>4. Allow access to USB devices</b>
-  <pre id="code4">sudo usermod -aG dialout $USER</pre>
-  <button onclick="copyCode('code4', this)">Copy</button>
-</div>
+      <!-- Step 4 -->
+      <li class="block">
+        <b>Allow access to USB devices</b>
+        <pre id="code4">sudo usermod -aG dialout $USER</pre>
+        <button onclick="copyCode('code4', this)">Copy</button>
+      </li>
 
-<!-- Step 5 -->
-<div class="block">
-  <b>5. Run ESPHome container with USB access</b>
-  <pre id="code5">docker run -d \
+      <!-- Step 5 -->
+      <li class="block">
+        <b>Run ESPHome container with USB access</b>
+        <pre id="code5">
+docker run -d \
   --name esphome \
   --restart=unless-stopped \
   -v ~/Python/ESPhome_configs:/config \
   -p 6052:6052 \
   --device=/dev/ttyUSB0 \
-  esphome/esphome</pre>
-  <button onclick="copyCode('code5', this)">Copy</button>
-</div>
+  esphome/esphome</pre
+        >
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </li>
 
-<!-- Step 6 -->
-<div class="block">
-  <b>6. Open ESPHome</b>
-  <pre id="code6">http://localhost:6052</pre>
-  <button onclick="copyCode('code6', this)">Copy</button>
-</div>
+      <li class="block">
+        <b>Copy secrets from another computer</b>
+        <p>
+          Clone repo esphome to local computer. Manually create file
+          secrets.yaml and copy the content from another computer.
+        </p>
+      </li>
 
-<!-- Step 7 -->
-<div class="block">
-  <b>7. Flash via CLI inside running container</b>
-  <pre id="code7">docker exec -it esphome esphome run example.yaml</pre>
-  <button onclick="copyCode('code7', this)">Copy</button>
-</div>
+      <!-- Step 7 -->
+      <li class="block">
+        <b>Open ESPHome</b>
+        <pre id="code7">http://localhost:6052</pre>
+        <button onclick="copyCode('code7', this)">Copy</button>
+      </li>
 
-</body>
+      <!-- Step 78 -->
+      <li class="block">
+        <b>Flash via CLI inside running container</b>
+        <pre id="code8">docker exec -it esphome esphome run example.yaml</pre>
+        <button onclick="copyCode('code8', this)">Copy</button>
+      </li>
+    </ol>
+  </body>
 </html>
