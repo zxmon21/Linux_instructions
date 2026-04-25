@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home Assistant Migration</title>
+
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+    <ol>
+      <h1>Home Assistant VM Migration (Ubuntu 22.04 → 26.04)</h1>
+
+      <!-- Step 1 -->
+      <li class="block">
+        <b>Shut down Home Assistant VM on old host</b>
+        <pre id="code1">
+virsh shutdown homeassistant
+virsh list --all</pre>
+        <button onclick="copyCode('code1', this)">Copy</button>
+      </li>
+
+      <!-- Step 2 -->
+      <li class="block">
+        <b>Backup VM disk and configuration</b>
+        <pre id="code2">
+sudo cp /var/lib/libvirt/images/homeassistant.qcow2 ~/homeassistant.qcow2
+virsh dumpxml homeassistant > homeassistant.xml</pre>
+        <button onclick="copyCode('code2', this)">Copy</button>
+      </li>
+
+      <!-- Step 3 -->
+      <li class="block">
+        <b>Export firewall rules (important for mDNS)</b>
+        <pre id="code3">
+sudo iptables-save > ~/iptables-backup.rules</pre>
+        <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
+
+      <!-- Step 4 -->
+      <li class="block">
+        <b>Install virtualization stack on new host</b>
+        <pre id="code4">
+sudo apt update
+sudo apt install qemu-kvm libvirt-daemon-system libvirt-clients virt-manager bridge-utils</pre>
+        <button onclick="copyCode('code4', this)">Copy</button>
+      </li>
+
+      <!-- Step 5 -->
+      <li class="block">
+        <b>Enable libvirt and add user permissions</b>
+        <pre id="code5">
+sudo systemctl enable --now libvirtd
+sudo usermod -aG libvirt,kvm $USER</pre>
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Log out and back in</b>
+        <p>Required for libvirt group permissions to take effect.</p>
+      </li>
+
+      <!-- Step 6 -->
+      <li class="block">
+        <b>Copy VM files to new host</b>
+        <pre id="code6">
+scp homeassistant.qcow2 user@NEW_PC:/var/lib/libvirt/images/
+scp homeassistant.xml user@NEW_PC:~</pre>
+        <button onclick="copyCode('code6', this)">Copy</button>
+      </li>
+
+      <!-- Step 7 -->
+      <li class="block">
+        <b>Import and start VM</b>
+        <pre id="code7">
+virsh define homeassistant.xml
+virsh start homeassistant
+virsh list --all</pre>
+        <button onclick="copyCode('code7', this)">Copy</button>
+      </li>
+
+      <!-- Step 8 -->
+      <li class="block">
+        <b>Ensure Ethernet is default network (not WiFi)</b>
+        <pre id="code8">
+ip route</pre>
+        <button onclick="copyCode('code8', this)">Copy</button>
+      </li>
+
+      <!-- Step 9 -->
+      <li class="block">
+        <b>Disable WiFi as default route (for inverter-only usage)</b>
+        <pre id="code9">
+sudo nano /etc/netplan/01-netcfg.yaml</pre>
+        <button onclick="copyCode('code9', this)">Copy</button>
+      </li>
+
+      <!-- Step 10 -->
+      <li class="block">
+        <b>Example Netplan config</b>
+        <pre id="code10">
+network:
+  version: 2
+  ethernets:
+    enp3s0:
+      dhcp4: true
+
+  wifis:
+    wlp2s0:
+      dhcp4: true
+      dhcp4-overrides:
+        use-routes: false</pre>
+        <button onclick="copyCode('code10', this)">Copy</button>
+      </li>
+
+      <!-- Step 11 -->
+      <li class="block">
+        <b>Apply network config</b>
+        <pre id="code11">
+sudo netplan apply</pre>
+        <button onclick="copyCode('code11', this)">Copy</button>
+      </li>
+
+      <!-- Step 12 -->
+      <li class="block">
+        <b>Install and configure mDNS (Avahi)</b>
+        <pre id="code12">
+sudo apt install avahi-daemon
+sudo nano /etc/avahi/avahi-daemon.conf</pre>
+        <button onclick="copyCode('code12', this)">Copy</button>
+      </li>
+
+      <!-- Step 13 -->
+      <li class="block">
+        <b>Allow both interfaces for mDNS</b>
+        <pre id="code13">
+[server]
+allow-interfaces=enp3s0,wlp2s0
+use-ipv4=yes
+use-ipv6=no</pre>
+        <button onclick="copyCode('code13', this)">Copy</button>
+      </li>
+
+      <!-- Step 14 -->
+      <li class="block">
+        <b>Restart Avahi</b>
+        <pre id="code14">
+sudo systemctl restart avahi-daemon</pre>
+        <button onclick="copyCode('code14', this)">Copy</button>
+      </li>
+
+      <!-- Step 15 -->
+      <li class="block">
+        <b>Allow mDNS in firewall (critical)</b>
+        <pre id="code15">
+sudo iptables -A INPUT -p udp --dport 5353 -d 224.0.0.251 -j ACCEPT
+sudo iptables -A OUTPUT -p udp --sport 5353 -d 224.0.0.251 -j ACCEPT</pre>
+        <button onclick="copyCode('code15', this)">Copy</button>
+      </li>
+
+      <!-- Step 16 -->
+      <li class="block">
+        <b>Persist firewall rules</b>
+        <pre id="code16">
+sudo apt install iptables-persistent
+sudo netfilter-persistent save</pre>
+        <button onclick="copyCode('code16', this)">Copy</button>
+      </li>
+
+      <!-- Step 17 -->
+      <li class="block">
+        <b>Test Home Assistant</b>
+        <pre id="code17">
+ping &lt;HA-IP&gt;</pre>
+        <button onclick="copyCode('code17', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Open Home Assistant</b>
+        <a href="http://homeassistant.local:8123" target="_blank">
+          Open Home Assistant
+        </a>
+      </li>
+
+      <!-- Step 18 -->
+      <li class="block">
+        <b>Test mDNS discovery</b>
+        <pre id="code18">
+ping homeassistant.local
+avahi-browse -a</pre>
+        <button onclick="copyCode('code18', this)">Copy</button>
+      </li>
+
+      <!-- Step 19 -->
+      <li class="block">
+        <b>Test inverter connectivity via WiFi</b>
+        <pre id="code19">
+ping &lt;INVERTER-IP&gt;</pre>
+        <button onclick="copyCode('code19', this)">Copy</button>
+      </li>
+    </ol>
+  </body>
+</html>
