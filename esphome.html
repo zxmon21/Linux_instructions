@@ -61,18 +61,29 @@ newgrp docker</pre
 
       <!-- Step 5 -->
       <li class="block">
-        <b>Run ESPHome container with USB access</b>
+        <b>Run ESPHome container without USB access</b>
         <pre id="code5">
 docker run -d \
   --name esphome \
   --restart=unless-stopped \
   -v ~/Python/ESPhome_configs:/config \
   -p 6052:6052 \
-  --device=/dev/ttyUSB0 \
   esphome/esphome</pre
         >
         <button onclick="copyCode('code5', this)">Copy</button>
       </li>
+
+      <!-- Step flash -->
+      <li class="block">
+        <b>Flash new ESPs with a command line</b>
+        <pre id="code_flash">
+docker run --rm -it \
+  -v ~/Python/ESPhome_configs:/config \
+  --device=/dev/ttyUSB0 \
+  esphome/esphome run example.yaml</pre        >
+        <button onclick="copyCode('code_flash', this)">Copy</button>
+      </li>
+
 
       <li class="block">
         <b>Copy secrets from another computer</b>
