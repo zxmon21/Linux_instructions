@@ -28,7 +28,7 @@ sudo apt install network-manager netcat-openbsd</pre>
         <pre id="code2">
 nmcli device status</pre>
         <p>
-          Look for something like <code>wlxXXXXXXXXXXXX</code> (USB WiFi adapter).
+          Look for something like <code>wlp2s0</code> (USB WiFi adapter).
         </p>
         <button onclick="copyCode('code2', this)">Copy</button>
       </li>
@@ -39,7 +39,7 @@ nmcli device status</pre>
         <pre id="code3">
 nmcli device wifi list</pre>
         <p>
-          Look for SSID like <code>SUN2000-XXXXXXXXXXXX</code>.
+          Look for SSID like <code>SUN2000-HV2290249916</code>.
         </p>
         <button onclick="copyCode('code3', this)">Copy</button>
       </li>
@@ -48,7 +48,7 @@ nmcli device wifi list</pre>
       <li class="block">
         <b>Connect to inverter WiFi (initial test)</b>
         <pre id="code4">
-sudo nmcli device wifi connect "SUN2000-XXXXXXXXXXXX" ifname wlxXXXXXXXXXXXX</pre>
+sudo nmcli device wifi connect "SUN2000-HV2290249916" ifname wlp2s0</pre>
         <p>
           Replace interface and SSID accordingly.
         </p>
@@ -59,7 +59,7 @@ sudo nmcli device wifi connect "SUN2000-XXXXXXXXXXXX" ifname wlxXXXXXXXXXXXX</pr
       <li class="block">
         <b>Create a stable static IP configuration (recommended)</b>
         <pre id="code5">
-sudo nmcli connection modify "SUN2000-XXXXXXXXXXXX" \
+sudo nmcli connection modify "SUN2000-HV2290249916" \
 ipv4.method manual \
 ipv4.addresses 192.168.200.2/24 \
 ipv4.gateway 192.168.200.1 \
@@ -74,8 +74,8 @@ ipv4.dns 192.168.200.1</pre>
       <li class="block">
         <b>Reconnect using the new configuration</b>
         <pre id="code6">
-sudo nmcli connection down "SUN2000-XXXXXXXXXXXX"
-sudo nmcli connection up "SUN2000-XXXXXXXXXXXX"</pre>
+sudo nmcli connection down "SUN2000-HV2290249916"
+sudo nmcli connection up "SUN2000-HV2290249916"</pre>
         <button onclick="copyCode('code6', this)">Copy</button>
       </li>
 
@@ -83,7 +83,7 @@ sudo nmcli connection up "SUN2000-XXXXXXXXXXXX"</pre>
       <li class="block">
         <b>Verify IP configuration</b>
         <pre id="code7">
-nmcli device show wlxXXXXXXXXXXXX
+nmcli device show wlp2s0
 ip route</pre>
         <p>
           You should see:
@@ -113,8 +113,8 @@ nano ~/restore_sun.sh</pre>
         <pre id="code9b">
 #!/bin/bash
 
-IF="wlxXXXXXXXXXXXX"
-SSID="SUN2000-XXXXXXXXXXXX"
+IF="wlp2s0"
+SSID="SUN2000-HV2290249916"
 
 nmcli device disconnect "$IF" 2>/dev/null
 pkill -f "dhclient.*$IF" 2>/dev/null
