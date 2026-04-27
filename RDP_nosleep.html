@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ubuntu 26.04 Lid, Sleep & RDP Setup</title>
+
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+    <ol>
+      <h1>Ubuntu 26.04: Prevent Sleep + Lid Ignore + RDP Server Setup</h1>
+
+      <!-- Step 1 -->
+      <li class="block">
+        <b>Install RDP server (xrdp)</b>
+        <pre id="code1">
+sudo apt update
+sudo apt install xrdp xorgxrdp -y</pre
+        >
+        <button onclick="copyCode('code1', this)">Copy</button>
+      </li>
+
+      <!-- Step 2 -->
+      <li class="block">
+        <b>Enable and start RDP service</b>
+        <pre id="code2">
+sudo systemctl enable xrdp
+sudo systemctl start xrdp</pre
+        >
+        <button onclick="copyCode('code2', this)">Copy</button>
+      </li>
+
+      <!-- Step 3 -->
+      <li class="block">
+        <b>Allow RDP through firewall (if UFW is active)</b>
+        <pre id="code3">
+sudo ufw allow 3389/tcp</pre
+        >
+        <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
+
+      <!-- Step 4 -->
+      <li class="block">
+        <b>Verify RDP service is running</b>
+        <pre id="code4">
+systemctl status xrdp</pre
+        >
+        <button onclick="copyCode('code4', this)">Copy</button>
+      </li>
+
+      <!-- Step 5 -->
+      <li class="block">
+        <b>Find your local IP address</b>
+        <pre id="code5">
+ip a</pre
+        >
+        <p>Look for something like <code>192.168.x.x</code></p>
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </li>
+
+      <!-- Step 6 -->
+      <li class="block">
+        <b>Prevent lid close from affecting power</b>
+        <pre id="code6">
+sudo nano /etc/systemd/logind.conf</pre
+        >
+        <p>Add or modify:</p>
+        <pre id="code6b">
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore</pre
+        >
+        <button onclick="copyCode('code6b', this)">Copy</button>
+      </li>
+
+      <!-- Step 7 -->
+      <li class="block">
+        <b>Restart logind to apply lid settings</b>
+        <pre id="code7">
+sudo systemctl restart systemd-logind</pre
+        >
+        <button onclick="copyCode('code7', this)">Copy</button>
+      </li>
+
+      <!-- Step 8 -->
+      <li class="block">
+        <b>Disable suspend, hibernate and sleep states</b>
+        <pre id="code8">
+sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target</pre
+        >
+        <button onclick="copyCode('code8', this)">Copy</button>
+      </li>
+
+      <!-- Step 9 -->
+      <li class="block">
+        <b>Disable GNOME idle sleep</b>
+        <pre id="code9">
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-ac-type 'nothing'
+gsettings set org.gnome.settings-daemon.plugins.power sleep-inactive-battery-type 'nothing'
+gsettings set org.gnome.desktop.session idle-delay 0</pre
+        >
+        <button onclick="copyCode('code9', this)">Copy</button>
+      </li>
+
+      <!-- Step 10 -->
+      <li class="block">
+        <b>Disable screen lock (optional but recommended for RDP use)</b>
+        <pre id="code10">
+gsettings set org.gnome.desktop.screensaver lock-enabled false</pre
+        >
+        <button onclick="copyCode('code10', this)">Copy</button>
+      </li>
+
+      <!-- Step 11 -->
+      <li class="block">
+        <b>Connect via RDP from another machine</b>
+        <pre id="code11">
+<your-ip>:3389</pre
+        >
+        <p>
+          Use Windows Remote Desktop, Remmina, or Microsoft Remote Desktop.
+        </p>
+        <button onclick="copyCode('code11', this)">Copy</button>
+      </li>
+
+      <!-- Step 12 -->
+      <li class="block">
+        <b>Check everything is working</b>
+        <pre id="code12">
+systemctl status xrdp
+ip a
+systemctl status systemd-logind</pre
+        >
+        <button onclick="copyCode('code12', this)">Copy</button>
+      </li>
+
+      <!-- Notes -->
+      <li class="block">
+        <b>Notes</b>
+        <p>
+          - xrdp works best with Xorg sessions (default on Ubuntu 26.04)<br />
+          - Masking sleep targets fully prevents suspend even on laptop lid close<br />
+          - If you want Wayland RDP later, different setup is required
+        </p>
+      </li>
+    </ol>
+  </body>
+</html>
