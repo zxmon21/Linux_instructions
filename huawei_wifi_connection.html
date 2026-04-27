@@ -38,37 +38,38 @@ sudo apt install network-manager netcat-openbsd</pre
         <p>Look for SSID like <code>SUN2000-HV2290249916</code>.</p>
         <button onclick="copyCode('code3', this)">Copy</button>
       </li>
-
       <li class="block">
         <b>Create a password file for WiFi authentication</b>
         <pre id="code_pw1">nano ~/sun2000_passwd.conf</pre>
-        <p>Add the following line (replace with your actual WiFi password):</p>
-        <pre id="code_pw1b">
-802-11-wireless-security.psk:YOUR_WIFI_PASSWORD_SEE_HUAWEI_MANUAL</pre
-        >
-        <p>Secure the file so only your user can read it:</p>
+        <p>
+          Add the WiFi PSK (Huawei default is often Changeme unless changed):
+        </p>
+        <pre id="code_pw1b">802-11-wireless-security.psk:Changeme</pre>
+        <p>Secure the file:</p>
         <pre id="code_pw1c">chmod 600 ~/sun2000_passwd.conf</pre>
         <button onclick="copyCode('code_pw1b', this)">Copy</button>
       </li>
 
       <li class="block">
-        <b>Connect using nmcli with passwd-file</b>
+        <b>Create WiFi connection profile with WPA2 security (single step)</b>
         <pre id="code_pw2">
-sudo nmcli device wifi connect "SUN2000-HV2290249916" \
+sudo nmcli connection add \
+type wifi \
 ifname wlp2s0 \
-passwd-file ~/sun2000_passwd.conf</pre
+con-name sun2000 \
+ssid "SUN2000-HV2290249916" \
+wifi-sec.key-mgmt wpa-psk</pre
         >
         <button onclick="copyCode('code_pw2', this)">Copy</button>
       </li>
 
-      <!-- Step 4 -->
       <li class="block">
-        <b>Connect to inverter WiFi (initial test)</b>
-        <pre id="code4">
-sudo nmcli device wifi connect "SUN2000-HV2290249916" ifname wlp2s0</pre
+        <b>Activate connection using passwd-file</b>
+        <pre id="code_pw3">
+sudo nmcli connection up sun2000 \
+passwd-file ~/sun2000_passwd.conf</pre
         >
-        <p>Replace interface and SSID accordingly.</p>
-        <button onclick="copyCode('code4', this)">Copy</button>
+        <button onclick="copyCode('code_pw3', this)">Copy</button>
       </li>
 
       <!-- Step 5 -->
