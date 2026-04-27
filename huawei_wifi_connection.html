@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Huawei SUN2000 WiFi + Modbus Setup</title>
+
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+    <ol>
+      <h1>Huawei SUN2000 WiFi (AP Mode) Setup on Ubuntu</h1>
+
+      <!-- Step 1 -->
+      <li class="block">
+        <b>Install required tools</b>
+        <pre id="code1">
+sudo apt update
+sudo apt install network-manager netcat-openbsd</pre>
+        <button onclick="copyCode('code1', this)">Copy</button>
+      </li>
+
+      <!-- Step 2 -->
+      <li class="block">
+        <b>Identify your WiFi interface</b>
+        <pre id="code2">
+nmcli device status</pre>
+        <p>
+          Look for something like <code>wlxXXXXXXXXXXXX</code> (USB WiFi adapter).
+        </p>
+        <button onclick="copyCode('code2', this)">Copy</button>
+      </li>
+
+      <!-- Step 3 -->
+      <li class="block">
+        <b>Scan for Huawei inverter WiFi</b>
+        <pre id="code3">
+nmcli device wifi list</pre>
+        <p>
+          Look for SSID like <code>SUN2000-XXXXXXXXXXXX</code>.
+        </p>
+        <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
+
+      <!-- Step 4 -->
+      <li class="block">
+        <b>Connect to inverter WiFi (initial test)</b>
+        <pre id="code4">
+sudo nmcli device wifi connect "SUN2000-XXXXXXXXXXXX" ifname wlxXXXXXXXXXXXX</pre>
+        <p>
+          Replace interface and SSID accordingly.
+        </p>
+        <button onclick="copyCode('code4', this)">Copy</button>
+      </li>
+
+      <!-- Step 5 -->
+      <li class="block">
+        <b>Create a stable static IP configuration (recommended)</b>
+        <pre id="code5">
+sudo nmcli connection modify "SUN2000-XXXXXXXXXXXX" \
+ipv4.method manual \
+ipv4.addresses 192.168.200.2/24 \
+ipv4.gateway 192.168.200.1 \
+ipv4.dns 192.168.200.1</pre>
+        <p>
+          This avoids unreliable DHCP from the inverter.
+        </p>
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </li>
+
+      <!-- Step 6 -->
+      <li class="block">
+        <b>Reconnect using the new configuration</b>
+        <pre id="code6">
+sudo nmcli connection down "SUN2000-XXXXXXXXXXXX"
+sudo nmcli connection up "SUN2000-XXXXXXXXXXXX"</pre>
+        <button onclick="copyCode('code6', this)">Copy</button>
+      </li>
+
+      <!-- Step 7 -->
+      <li class="block">
+        <b>Verify IP configuration</b>
+        <pre id="code7">
+nmcli device show wlxXXXXXXXXXXXX
+ip route</pre>
+        <p>
+          You should see:
+          <br />
+          <code>192.168.200.2/24</code> and route to <code>192.168.200.0/24</code>
+        </p>
+        <button onclick="copyCode('code7', this)">Copy</button>
+      </li>
+
+      <!-- Step 8 -->
+      <li class="block">
+        <b>Test Modbus connectivity</b>
+        <pre id="code8">
+nc -zv 192.168.200.1 6607</pre>
+        <p>
+          If successful, the inverter is reachable.
+        </p>
+        <button onclick="copyCode('code8', this)">Copy</button>
+      </li>
+
+      <!-- Step 9 -->
+      <li class="block">
+        <b>Create WiFi recovery script</b>
+        <pre id="code9">
+nano ~/restore_sun.sh</pre>
+        <p>Paste:</p>
+        <pre id="code9b">
+#!/bin/bash
+
+IF="wlxXXXXXXXXXXXX"
+SSID="SUN2000-XXXXXXXXXXXX"
+
+nmcli device disconnect "$IF" 2>/dev/null
+pkill -f "dhclient.*$IF" 2>/dev/null
+
+ip link set "$IF" down
+sleep 3
+ip link set "$IF" up
+sleep 5
+
+nmcli device wifi connect "$SSID" ifname "$IF"</pre>
+        <button onclick="copyCode('code9b', this)">Copy</button>
+      </li>
+
+      <!-- Step 10 -->
+      <li class="block">
+        <b>Make script executable</b>
+        <pre id="code10">
+chmod +x ~/restore_sun.sh</pre>
+        <button onclick="copyCode('code10', this)">Copy</button>
+      </li>
+
+      <!-- Step 11 -->
+      <li class="block">
+        <b>Create watchdog script</b>
+        <pre id="code11">
+nano ~/sun_watchdog.sh</pre>
+        <p>Paste:</p>
+        <pre id="code11b">
+#!/bin/bash
+
+if ! nc -z -w3 192.168.200.1 6607; then
+    ~/restore_sun.sh
+fi</pre>
+        <button onclick="copyCode('code11b', this)">Copy</button>
+      </li>
+
+      <!-- Step 12 -->
+      <li class="block">
+        <b>Make watchdog executable</b>
+        <pre id="code12">
+chmod +x ~/sun_watchdog.sh</pre>
+        <button onclick="copyCode('code12', this)">Copy</button>
+      </li>
+
+      <!-- Step 13 -->
+      <li class="block">
+        <b>Run watchdog automatically (cron)</b>
+        <pre id="code13">
+crontab -e</pre>
+        <p>Add:</p>
+        <pre id="code13b">
+*/2 * * * * /home/$USER/sun_watchdog.sh</pre>
+        <button onclick="copyCode('code13b', this)">Copy</button>
+      </li>
+
+      <!-- Step 14 -->
+      <li class="block">
+        <b>Verify everything works</b>
+        <pre id="code14">
+nc -zv 192.168.200.1 6607
+nmcli device status</pre>
+        <p>
+          If WiFi drops, it should recover automatically within ~2 minutes.
+        </p>
+        <button onclick="copyCode('code14', this)">Copy</button>
+      </li>
+
+      <!-- Notes -->
+      <li class="block">
+        <b>Notes</b>
+        <p>
+          - Huawei SUN2000 WiFi AP mode is unstable for long-term use<br />
+          - Static IP improves reliability significantly<br />
+          - Ethernet or WiFi client mode is more stable if available
+        </p>
+      </li>
+    </ol>
+  </body>
+</html>
