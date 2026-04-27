@@ -18,40 +18,56 @@
         <b>Install required tools</b>
         <pre id="code1">
 sudo apt update
-sudo apt install network-manager netcat-openbsd</pre>
+sudo apt install network-manager netcat-openbsd</pre
+        >
         <button onclick="copyCode('code1', this)">Copy</button>
       </li>
 
       <!-- Step 2 -->
       <li class="block">
         <b>Identify your WiFi interface</b>
-        <pre id="code2">
-nmcli device status</pre>
-        <p>
-          Look for something like <code>wlp2s0</code> (USB WiFi adapter).
-        </p>
+        <pre id="code2">nmcli device status</pre>
+        <p>Look for something like <code>wlp2s0</code> (USB WiFi adapter).</p>
         <button onclick="copyCode('code2', this)">Copy</button>
       </li>
 
       <!-- Step 3 -->
       <li class="block">
         <b>Scan for Huawei inverter WiFi</b>
-        <pre id="code3">
-nmcli device wifi list</pre>
-        <p>
-          Look for SSID like <code>SUN2000-HV2290249916</code>.
-        </p>
+        <pre id="code3">nmcli device wifi list</pre>
+        <p>Look for SSID like <code>SUN2000-HV2290249916</code>.</p>
         <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Create a password file for WiFi authentication</b>
+        <pre id="code_pw1">nano ~/sun2000_passwd.conf</pre>
+        <p>Add the following line (replace with your actual WiFi password):</p>
+        <pre id="code_pw1b">
+802-11-wireless-security.psk:YOUR_WIFI_PASSWORD_SEE_HUAWEI_MANUAL</pre
+        >
+        <p>Secure the file so only your user can read it:</p>
+        <pre id="code_pw1c">chmod 600 ~/sun2000_passwd.conf</pre>
+        <button onclick="copyCode('code_pw1b', this)">Copy</button>
+      </li>
+
+      <li class="block">
+        <b>Connect using nmcli with passwd-file</b>
+        <pre id="code_pw2">
+sudo nmcli device wifi connect "SUN2000-HV2290249916" \
+ifname wlp2s0 \
+passwd-file ~/sun2000_passwd.conf</pre
+        >
+        <button onclick="copyCode('code_pw2', this)">Copy</button>
       </li>
 
       <!-- Step 4 -->
       <li class="block">
         <b>Connect to inverter WiFi (initial test)</b>
         <pre id="code4">
-sudo nmcli device wifi connect "SUN2000-HV2290249916" ifname wlp2s0</pre>
-        <p>
-          Replace interface and SSID accordingly.
-        </p>
+sudo nmcli device wifi connect "SUN2000-HV2290249916" ifname wlp2s0</pre
+        >
+        <p>Replace interface and SSID accordingly.</p>
         <button onclick="copyCode('code4', this)">Copy</button>
       </li>
 
@@ -63,10 +79,9 @@ sudo nmcli connection modify "SUN2000-HV2290249916" \
 ipv4.method manual \
 ipv4.addresses 192.168.200.2/24 \
 ipv4.gateway 192.168.200.1 \
-ipv4.dns 192.168.200.1</pre>
-        <p>
-          This avoids unreliable DHCP from the inverter.
-        </p>
+ipv4.dns 192.168.200.1</pre
+        >
+        <p>This avoids unreliable DHCP from the inverter.</p>
         <button onclick="copyCode('code5', this)">Copy</button>
       </li>
 
@@ -75,7 +90,8 @@ ipv4.dns 192.168.200.1</pre>
         <b>Reconnect using the new configuration</b>
         <pre id="code6">
 sudo nmcli connection down "SUN2000-HV2290249916"
-sudo nmcli connection up "SUN2000-HV2290249916"</pre>
+sudo nmcli connection up "SUN2000-HV2290249916"</pre
+        >
         <button onclick="copyCode('code6', this)">Copy</button>
       </li>
 
@@ -84,11 +100,13 @@ sudo nmcli connection up "SUN2000-HV2290249916"</pre>
         <b>Verify IP configuration</b>
         <pre id="code7">
 nmcli device show wlp2s0
-ip route</pre>
+ip route</pre
+        >
         <p>
           You should see:
           <br />
-          <code>192.168.200.2/24</code> and route to <code>192.168.200.0/24</code>
+          <code>192.168.200.2/24</code> and route to
+          <code>192.168.200.0/24</code>
         </p>
         <button onclick="copyCode('code7', this)">Copy</button>
       </li>
@@ -96,19 +114,15 @@ ip route</pre>
       <!-- Step 8 -->
       <li class="block">
         <b>Test Modbus connectivity</b>
-        <pre id="code8">
-nc -zv 192.168.200.1 6607</pre>
-        <p>
-          If successful, the inverter is reachable.
-        </p>
+        <pre id="code8">nc -zv 192.168.200.1 6607</pre>
+        <p>If successful, the inverter is reachable.</p>
         <button onclick="copyCode('code8', this)">Copy</button>
       </li>
 
       <!-- Step 9 -->
       <li class="block">
         <b>Create WiFi recovery script</b>
-        <pre id="code9">
-nano ~/restore_sun.sh</pre>
+        <pre id="code9">nano ~/restore_sun.sh</pre>
         <p>Paste:</p>
         <pre id="code9b">
 #!/bin/bash
@@ -124,49 +138,46 @@ sleep 3
 ip link set "$IF" up
 sleep 5
 
-nmcli device wifi connect "$SSID" ifname "$IF"</pre>
+nmcli device wifi connect "$SSID" ifname "$IF"</pre
+        >
         <button onclick="copyCode('code9b', this)">Copy</button>
       </li>
 
       <!-- Step 10 -->
       <li class="block">
         <b>Make script executable</b>
-        <pre id="code10">
-chmod +x ~/restore_sun.sh</pre>
+        <pre id="code10">chmod +x ~/restore_sun.sh</pre>
         <button onclick="copyCode('code10', this)">Copy</button>
       </li>
 
       <!-- Step 11 -->
       <li class="block">
         <b>Create watchdog script</b>
-        <pre id="code11">
-nano ~/sun_watchdog.sh</pre>
+        <pre id="code11">nano ~/sun_watchdog.sh</pre>
         <p>Paste:</p>
         <pre id="code11b">
 #!/bin/bash
 
 if ! nc -z -w3 192.168.200.1 6607; then
     ~/restore_sun.sh
-fi</pre>
+fi</pre
+        >
         <button onclick="copyCode('code11b', this)">Copy</button>
       </li>
 
       <!-- Step 12 -->
       <li class="block">
         <b>Make watchdog executable</b>
-        <pre id="code12">
-chmod +x ~/sun_watchdog.sh</pre>
+        <pre id="code12">chmod +x ~/sun_watchdog.sh</pre>
         <button onclick="copyCode('code12', this)">Copy</button>
       </li>
 
       <!-- Step 13 -->
       <li class="block">
         <b>Run watchdog automatically (cron)</b>
-        <pre id="code13">
-crontab -e</pre>
+        <pre id="code13">crontab -e</pre>
         <p>Add:</p>
-        <pre id="code13b">
-*/2 * * * * /home/$USER/sun_watchdog.sh</pre>
+        <pre id="code13b">*/2 * * * * /home/$USER/sun_watchdog.sh</pre>
         <button onclick="copyCode('code13b', this)">Copy</button>
       </li>
 
@@ -175,10 +186,9 @@ crontab -e</pre>
         <b>Verify everything works</b>
         <pre id="code14">
 nc -zv 192.168.200.1 6607
-nmcli device status</pre>
-        <p>
-          If WiFi drops, it should recover automatically within ~2 minutes.
-        </p>
+nmcli device status</pre
+        >
+        <p>If WiFi drops, it should recover automatically within ~2 minutes.</p>
         <button onclick="copyCode('code14', this)">Copy</button>
       </li>
 
