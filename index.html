@@ -34,11 +34,29 @@
         id="code_aptinst"
         style="background: #f5f5f5; padding: 10px; border-radius: 6px"
       >
-sudo apt install git audacity util-linux-extra remmina remmina-plugin-rdp net-tools simple-scan
+sudo apt install git audacity util-linux-extra remmina remmina-plugin-rdp net-tools simple-scan hplip hplip-gui printer-driver-hpcups
     </pre
       >
       <button
         onclick="copyCode('code_aptinst', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
+
+    <h2>Install hp-plugins (scanner, printer)</h2>
+    <!-- Step 7 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <pre
+        id="code_hpplugin"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
+hp-plugin
+    </pre
+      >
+      <button
+        onclick="copyCode('code_hpplugin', this)"
         style="position: absolute; top: 0; right: 0"
       >
         Copy
