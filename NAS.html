@@ -20,8 +20,9 @@
       <a href="overview.html">Infrastructure Overview</a>
       <p>
         We have a QNAP TS-453D NAS at home that serves as a storage and application server.
-        <li>Our NAS is running at 192.168.50.140. </li>
-        
+        <li>Our NAS is running at 192.168.50.140.</li>
+        <li>The NAS is configured to be reachable under a domain name. See NAS -> MyQNAPcloudLink -> DDNS</li>
+        <li>You can access it via SSH on port 2218 inside and outside the home network. Control panel -> Network -> SSH. Account <i>admin</i> is disabled for security reasons.</li>
         <li>The NAS is providing SSL certs through QNAP onboard configuration of LetsEncrypt. Control panel -> System -> Security -> SSL Certificate & Private key -> Server certificate</li>
         
         <li>The NAS is running Container Station for Docker
