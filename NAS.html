@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>QNAP Container Infrastructure</title>
+
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+    <h1>QNAP Container Infrastructure</h1>
+    <p>
+      Documentation for containerized services, storage locations, networking,
+      reverse proxy access, and external authentication setup on the QNAP NAS.
+    </p>
+
+    <div class="card">
+      <a href="overview.html">Infrastructure Overview</a>
+      <p>
+        We have a QNAP TS-453D NAS at home that serves as a storage and application server.
+        <li>Our NAS is running at 192.168.50.140. </li>
+        
+        <li>The NAS is providing SSL certs through QNAP onboard configuration of LetsEncrypt. Control panel -> System -> Security -> SSL Certificate & Private key -> Server certificate</li>
+        
+        <li>The NAS is running Container Station for Docker
+        management. It is hosting these applications with containers:
+        <ul>
+          <li>Minecraft server</li>
+          <li>Authelia for authentication of web services external access</li>
+          <li>Paperless for document management</li>
+          <li>YT-DLP web ui (internal only)</li>
+          <li>RUT</li>
+        </ul>
+        </li>
+        High-level overview of the NAS, Docker environment, networking, and
+        service architecture.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="container_locations.html">Container Locations</a>
+      <p>
+        Where Docker Compose files, stack definitions, bind mounts, and
+        persistent container data are stored on the NAS.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="volumes.html">Volumes and Persistent Storage</a>
+      <p>
+        Documentation of Docker volumes, bind mounts, media paths, backups, and
+        persistent application storage.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="networking.html">Networking</a>
+      <p>
+        Internal Docker networks, bridge configuration, exposed ports, DNS, and
+        communication between containers.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="backup_restore.html">Backup and Restore</a>
+      <p>
+        Backup procedures for Compose files, application configs, databases, and
+        persistent volumes.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="updates.html">Container Updates</a>
+      <p>
+        Procedures for updating containers, rebuilding stacks, pulling images,
+        and rollback strategies.
+      </p>
+    </div>
+
+    <h2>Core Infrastructure</h2>
+
+    <div class="card">
+      <a href="docker.html">Docker / Container Station</a>
+      <p>
+        Docker engine configuration, Container Station notes, compose workflow,
+        and container management procedures.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="nginx.html">NGINX Reverse Proxy</a>
+      <p>
+        Reverse proxy configuration, SSL termination, virtual hosts, and routing
+        rules for internal services.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="authelia.html">Authelia Authentication</a>
+      <p>
+        Single sign-on, MFA, access policies, session management, and protected
+        applications.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="external_access.html">External Access</a>
+      <p>
+        How services are securely accessed from outside the home network,
+        including DNS, certificates, reverse proxying, and authentication flow.
+      </p>
+    </div>
+
+    <h2>Container Documentation</h2>
+
+    <p>
+      Each application/container should have its own documentation page with:
+    </p>
+
+    <ul>
+      <li>Purpose of the container/service</li>
+      <li>Docker Compose or stack location</li>
+      <li>Persistent storage locations</li>
+      <li>Important configuration files</li>
+      <li>Ports and networking</li>
+      <li>Dependencies on other containers</li>
+      <li>Backup considerations</li>
+      <li>Update procedure</li>
+    </ul>
+
+    <div class="card">
+      <a href="container_template.html">Container Documentation Template</a>
+      <p>
+        Standardized template for documenting individual containers and services.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="home_assistant.html">Home Assistant</a>
+      <p>
+        Home Assistant container setup, integrations, storage paths, and backup
+        notes.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="esphome.html">ESPHome</a>
+      <p>
+        ESPHome container configuration, device management, firmware builds, and
+        YAML storage.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="frigate.html">Frigate</a>
+      <p>
+        NVR setup, camera storage locations, Coral TPU configuration, and media
+        retention policies.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="authelia_service.html">Authelia Service</a>
+      <p>
+        Container-specific configuration, users database, secrets, and session
+        storage.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="nginx_proxy_manager.html">NGINX Proxy Manager</a>
+      <p>
+        Reverse proxy host definitions, SSL certificates, access lists, and
+        proxy routing configuration.
+      </p>
+    </div>
+
+    <div class="card">
+      <a href="portainer.html">Portainer</a>
+      <p>
+        Container management UI, stack deployment, and administrative access.
+      </p>
+    </div>
+
+    <h2>Reference Information</h2>
+
+    <div style="margin-bottom: 20px; position: relative">
+      <h3>Example Docker Compose locations</h3>
+
+      <pre
+        id="code_composepaths"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
+/share/Container/docker/
+/share/Container/compose/
+/share/CACHEDEV1_DATA/docker/
+/share/Docker/
+      </pre>
+
+      <button
+        onclick="copyCode('code_composepaths', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
+
+    <div style="margin-bottom: 20px; position: relative">
+      <h3>Example persistent volume locations</h3>
+
+      <pre
+        id="code_volumes"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
+/share/Container/appdata/
+/share/CACHEDEV1_DATA/appdata/
+/share/docker/
+/var/lib/docker/volumes/
+      </pre>
+
+      <button
+        onclick="copyCode('code_volumes', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
+
+    <div style="margin-bottom: 20px; position: relative">
+      <h3>Useful Docker commands</h3>
+
+      <pre
+        id="code_dockercmds"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
+docker ps
+docker compose ps
+docker logs container_name
+docker inspect container_name
+docker volume ls
+docker network ls
+docker compose pull
+docker compose up -d
+      </pre>
+
+      <button
+        onclick="copyCode('code_dockercmds', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
+  </body>
+</html>

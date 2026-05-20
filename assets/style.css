@@ -29,3 +29,37 @@ b {
   display: block;
   margin-bottom: 6px;
 }
+
+/* Multi-level lists */
+
+.nested-list,
+.nested-list ul {
+  margin: 0;
+  padding-left: 24px;
+}
+
+.nested-list > li {
+  margin-bottom: 12px;
+}
+
+.nested-list ul {
+  margin-top: 8px;
+}
+
+.nested-list ul li {
+  margin-bottom: 6px;
+}
+
+/* Different bullet styles per level */
+
+.nested-list {
+  list-style-type: disc;
+}
+
+.nested-list ul {
+  list-style-type: circle;
+}
+
+.nested-list ul ul {
+  list-style-type: square;
+}
