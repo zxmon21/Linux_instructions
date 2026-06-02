@@ -209,3 +209,30 @@ avahi-browse -a</pre
     </ol>
   </body>
 </html>
+ticon367@ticon367-Latitude-E6230:~$ nmcli device status
+DEVICE   TYPE      STATE                   CONNECTION         
+eno1     ethernet  connected               Wired connection 1 
+wlp2s0   wifi      connected               sun2000            
+lo       loopback  connected (externally)  lo                 
+docker0  bridge    connected (externally)  docker0            
+virbr0   bridge    connected (externally)  virbr0             
+ticon367@ticon367-Latitude-E6230:~$ sudo nmcli connection add type bridge ifname br0 con-name br0
+[sudo: authenticate] Password:         
+Connection 'br0' (2baa74d7-d59e-40e3-94e4-d99226aa621a) successfully added.
+ticon367@ticon367-Latitude-E6230:~$ sudo nmcli connection add type bridge-slave ifname eno1 master br0
+Connection 'bridge-slave-eno1' (fe8e8bfc-92e2-48fa-a4dc-4f4cc3866635) successfully added.
+ticon367@ticon367-Latitude-E6230:~$ nmcli connection show
+NAME                  UUID                                  TYPE      DEVICE  
+Wired connection 1    373a7c53-b700-3184-ac3b-d49a0b30de02  ethernet  eno1    
+sun2000               7eb6efcd-41c6-48e9-84e5-56c0260945d0  wifi      wlp2s0  
+br0                   2baa74d7-d59e-40e3-94e4-d99226aa621a  bridge    br0     
+lo                    fc1fa3b2-1c76-4fc6-a1a5-84a3b95d7544  loopback  lo      
+docker0               b0013849-6484-4bad-908f-285ebb2f8de6  bridge    docker0 
+virbr0                579ac313-c0b9-4b38-8545-47afb7c6c816  bridge    virbr0  
+bridge-slave-eno1     fe8e8bfc-92e2-48fa-a4dc-4f4cc3866635  ethernet  --      
+SUN2000-HV2290249916  0a7df911-00a5-479a-ad26-b041051f8595  wifi      --      
+Supernetzwerk         ba3f199f-0e78-461f-adba-e5cc5642e9e1  wifi      --      
+ticon367@ticon367-Latitude-E6230:~$ sudo nmcli connection down "Wired connection 1"
+Connection 'Wired connection 1' successfully deactivated (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/6)
+ticon367@ticon367-Latitude-E6230:~$ sudo nmcli connection up br0
+Connection successfully activated (controller waiting for ports) (D-Bus active path: /org/freedesktop/NetworkManager/ActiveConnection/12)
