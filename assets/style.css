@@ -5,10 +5,10 @@ body {
   padding: 0 20px;
 }
 
-/* .block {
+.block {
   margin-bottom: 24px;
   position: relative;
-} */
+}
 
 .block ol > li {
     position: relative;

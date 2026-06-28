@@ -112,8 +112,12 @@ ip route</pre
 
       <!-- Step 9 -->
       <li class="block">
+        <ol>
+          <li>
         <b>Create WiFi recovery script</b>
         <pre id="code9">nano ~/restore_sun.sh</pre>
+        <button onclick="copyCode('code9', this)">Copy</button>
+        </li><li>
         <p>Paste:</p>
         <pre id="code9b">
 #!/bin/bash
@@ -132,6 +136,8 @@ sleep 5
 nmcli device wifi connect "$SSID" ifname "$IF"</pre
         >
         <button onclick="copyCode('code9b', this)">Copy</button>
+        </li>
+        </ol>
       </li>
 
       <!-- Step 10 -->
