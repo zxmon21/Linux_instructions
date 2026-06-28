@@ -189,6 +189,73 @@ nmcli device status</pre
         <button onclick="copyCode('code14', this)">Copy</button>
       </li>
 
+            <!-- Step 16 -->
+      <li class="block">
+        <b>Route Home Assistant VM traffic to the inverter (host-side DNAT)</b>
+        <p>
+          Home Assistant OS (bridged on <code>br0</code>, e.g.
+          <code>192.168.50.x</code>) can't add custom routes to reach the
+          inverter's separate WiFi network. Instead, forward a port on the
+          host (<code>192.168.50.12</code>) through to the inverter via
+          <code>wlp2s0</code>.
+        </p>
+        <p>Edit the ufw rules file:</p>
+        <pre id="code16">sudo nano /etc/ufw/before.rules</pre>
+        <button onclick="copyCode('code16', this)">Copy</button>
+        <p>
+          Add a <code>*nat</code> section near the top of the file, before
+          <code>*filter</code> (create it if it doesn't already exist):
+        </p>
+        <pre id="code16b">*nat
+:PREROUTING ACCEPT [0:0]
+:POSTROUTING ACCEPT [0:0]
+-A PREROUTING -i br0 -p tcp --dport 6607 -d 192.168.50.12 -j DNAT --to-destination 192.168.200.1:6607
+-A POSTROUTING -o wlp2s0 -d 192.168.200.1 -j MASQUERADE
+COMMIT</pre>
+        <button onclick="copyCode('code16b', this)">Copy</button>
+        <p>
+          (<code>192.168.50.12</code> = host's <code>br0</code> IP,
+          <code>192.168.200.1</code> = inverter, <code>6607</code> = Huawei
+          Solar Modbus port)
+        </p>
+      </li>
+
+      <!-- Step 17 -->
+      <li class="block">
+        <b>Reload ufw so the rules load and persist across reboots</b>
+        <pre id="code17">sudo ufw disable
+sudo ufw enable</pre>
+        <button onclick="copyCode('code17', this)">Copy</button>
+      </li>
+
+      <!-- Step 18 -->
+      <li class="block">
+        <b>Verify the NAT rules are active</b>
+        <pre id="code18">sudo iptables -t nat -L PREROUTING -n -v
+sudo iptables -t nat -L POSTROUTING -n -v</pre>
+        <button onclick="copyCode('code18', this)">Copy</button>
+      </li>
+
+      <!-- Step 19 -->
+      <li class="block">
+        <b>Point the Huawei Solar integration at the host, not the inverter</b>
+        <p>
+          In Home Assistant, configure the Huawei Solar integration to
+          connect to the host's <code>br0</code> address instead of the
+          inverter's real address:
+        </p>
+        <pre id="code19">192.168.50.12 : 6607</pre>
+        <button onclick="copyCode('code19', this)">Copy</button>
+      </li>
+
+      <!-- Step 20 -->
+      <li class="block">
+        <b>Test reachability from Home Assistant</b>
+        <pre id="code20">nc -zv -w3 192.168.50.12 6607</pre>
+        <p>Should report <code>open</code>.</p>
+        <button onclick="copyCode('code20', this)">Copy</button>
+      </li>
+
       <!-- Notes -->
       <li class="block">
         <b>Notes</b>
