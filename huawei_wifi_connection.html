@@ -16,10 +16,8 @@
       <!-- Step 1 -->
       <li class="block">
         <b>Install required tools</b>
-        <pre id="code1">
-sudo apt update
-sudo apt install network-manager netcat-openbsd</pre
-        >
+        <pre id="code1">sudo apt update
+sudo apt install network-manager netcat-openbsd</pre>
         <button onclick="copyCode('code1', this)">Copy</button>
       </li>
 
@@ -38,16 +36,27 @@ sudo apt install network-manager netcat-openbsd</pre
         <p>Look for SSID like <code>SUN2000-HV2290249916</code>.</p>
         <button onclick="copyCode('code3', this)">Copy</button>
       </li>
+
       <li class="block">
-        <b>Create a password file for WiFi authentication</b>
-        <pre id="code_pw1">nano ~/sun2000_passwd.conf</pre>
-        <p>
-          Add the WiFi PSK (Huawei default is often Changeme unless changed):
-        </p>
-        <pre id="code_pw1b">802-11-wireless-security.psk:Changeme</pre>
-        <p>Secure the file:</p>
-        <pre id="code_pw1c">chmod 600 ~/sun2000_passwd.conf</pre>
-        <button onclick="copyCode('code_pw1b', this)">Copy</button>
+        <ol>
+          <li>
+            <b>Create a password file for WiFi authentication</b>
+            <pre id="code_pw1">nano ~/sun2000_passwd.conf</pre>
+            <p>
+              Add the WiFi PSK (Huawei default is often Changeme unless changed):
+            </p>
+            <button onclick="copyCode('code_pw1', this)">Copy</button>
+          </li>
+          <li>
+            <pre id="code_pw1b">802-11-wireless-security.psk:Changeme</pre>
+            <button onclick="copyCode('code_pw1b', this)">Copy</button>
+          </li>
+          <li>
+            <p>Secure the file:</p>
+            <pre id="code_pw1c">chmod 600 ~/sun2000_passwd.conf</pre>
+            <button onclick="copyCode('code_pw1c', this)">Copy</button>
+          </li>
+        </ol>
       </li>
 
       <li class="block">
