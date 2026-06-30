@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>eno1 Connectivity Watchdog Setup</title>
+
+    <link rel="stylesheet" href="assets/style.css" />
+    <script src="assets/app.js"></script>
+  </head>
+
+  <body>
+    <ol>
+      <h1>Network Watchdog: Auto-Restart eno1 on Connectivity Loss</h1>
+
+      <!-- Step 1 -->
+      <li class="block">
+        <b>Create the watchdog script</b>
+        <pre id="code1">
+sudo tee /usr/local/bin/netwatch-eno1.sh > /dev/null << 'EOF'
+#!/bin/bash
+TARGET="192.168.50.1"
+IFACE="eno1"
+FAIL_THRESHOLD=60   # seconds
+CHECK_INTERVAL=5    # seconds between pings
+LOGFILE="/var/log/netwatch-eno1.log"
+
+fail_start=0
+
+log() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') $1" >> "$LOGFILE"
+}
+
+while true; do
+    if ping -c 1 -W 2 "$TARGET" > /dev/null 2>&1; then
+        fail_start=0
+    else
+        now=$(date +%s)
+        if [ "$fail_start" -eq 0 ]; then
+            fail_start=$now
+            log "Lost connectivity to $TARGET, starting timer"
+        else
+            elapsed=$((now - fail_start))
+            if [ "$elapsed" -ge "$FAIL_THRESHOLD" ]; then
+                log "No connectivity to $TARGET for ${elapsed}s, restarting $IFACE"
+                ip link set "$IFACE" down
+                sleep 2
+                ip link set "$IFACE" up
+                log "$IFACE restarted"
+                fail_start=0
+                sleep 15
+            fi
+        fi
+    fi
+    sleep "$CHECK_INTERVAL"
+done
+EOF</pre
+        >
+        <button onclick="copyCode('code1', this)">Copy</button>
+      </li>
+
+      <!-- Step 2 -->
+      <li class="block">
+        <b>Make the script executable</b>
+        <pre id="code2">
+sudo chmod +x /usr/local/bin/netwatch-eno1.sh</pre
+        >
+        <button onclick="copyCode('code2', this)">Copy</button>
+      </li>
+
+      <!-- Step 3 -->
+      <li class="block">
+        <b>Create the systemd service unit</b>
+        <pre id="code3">
+sudo tee /etc/systemd/system/netwatch-eno1.service > /dev/null << 'EOF'
+[Unit]
+Description=Monitor eno1 connectivity to 192.168.50.1 and restart interface on prolonged failure
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/netwatch-eno1.sh
+Restart=always
+RestartSec=5
+User=root
+
+[Install]
+WantedBy=multi-user.target
+EOF</pre
+        >
+        <button onclick="copyCode('code3', this)">Copy</button>
+      </li>
+
+      <!-- Step 4 -->
+      <li class="block">
+        <b>Reload systemd and enable the service</b>
+        <pre id="code4">
+sudo systemctl daemon-reload
+sudo systemctl enable --now netwatch-eno1.service</pre
+        >
+        <button onclick="copyCode('code4', this)">Copy</button>
+      </li>
+
+      <!-- Step 5 -->
+      <li class="block">
+        <b>Check service status</b>
+        <pre id="code5">
+sudo systemctl status netwatch-eno1.service</pre
+        >
+        <button onclick="copyCode('code5', this)">Copy</button>
+      </li>
+
+      <!-- Step 6 -->
+      <li class="block">
+        <b>Tail the watchdog log</b>
+        <pre id="code6">
+tail -f /var/log/netwatch-eno1.log</pre
+        >
+        <button onclick="copyCode('code6', this)">Copy</button>
+      </li>
+
+      <!-- Step 7 -->
+      <li class="block">
+        <b>Restart the service after editing the script</b>
+        <pre id="code7">
+sudo systemctl restart netwatch-eno1.service</pre
+        >
+        <button onclick="copyCode('code7', this)">Copy</button>
+      </li>
+
+      <!-- Step 8 -->
+      <li class="block">
+        <b>Disable the watchdog (if needed)</b>
+        <pre id="code8">
+sudo systemctl disable --now netwatch-eno1.service</pre
+        >
+        <button onclick="copyCode('code8', this)">Copy</button>
+      </li>
+
+      <!-- Notes -->
+      <li class="block">
+        <b>Notes</b>
+        <p>
+          - Pings <code>192.168.50.1</code> via <code>eno1</code> every 5 seconds<br />
+          - Restart only triggers after 60 continuous seconds of failed connectivity, not after 60 failed pings<br />
+          - After a restart, the watchdog waits 15s before resuming checks to allow DHCP/link renegotiation<br />
+          - Restarting eno1 will briefly interrupt the Home Assistant VM's bridged networking and the Huawei inverter DNAT path<br />
+          - Service auto-starts on boot via <code>enable</code> and auto-restarts itself if it crashes via <code>Restart=always</code><br />
+          - Log file location: <code>/var/log/netwatch-eno1.log</code>
+        </p>
+      </li>
+    </ol>
+  </body>
+</html>
