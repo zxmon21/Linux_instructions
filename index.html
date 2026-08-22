@@ -21,6 +21,24 @@
     <div class="card">
       <h2>Remove unused applications</h2>
       <li>Firefox.</li>
+
+    <!-- Step 7 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <pre
+        id="code_remove_firefox"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
+sudo snap remove --purge firefox
+    </pre
+      >
+      <button
+        onclick="copyCode('code_remove_firefox', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
+
     </div>
 
     <h2>Install applications</h2>
@@ -35,7 +53,7 @@
         id="code_aptinst"
         style="background: #f5f5f5; padding: 10px; border-radius: 6px"
       >
-sudo apt install git audacity util-linux-extra remmina remmina-plugin-rdp net-tools simple-scan hplip hplip-gui printer-driver-hpcups htop
+sudo apt install git audacity util-linux-extra remmina remmina-plugin-rdp net-tools simple-scan hplip hplip-gui printer-driver-hpcups htop vlc
     </pre
       >
       <button
