@@ -64,6 +64,27 @@ sudo apt install git audacity util-linux-extra remmina remmina-plugin-rdp net-to
       </button>
     </div>
 
+    <h2>Silence AC connect sound for undisturbed recording</h2>
+    <!-- Step 7 -->
+    <div style="margin-bottom: 20px; position: relative">
+      <pre
+        id="code_powerplug"
+        style="background: #f5f5f5; padding: 10px; border-radius: 6px"
+      >
+sudo mv /usr/share/sounds/Yaru/stereo/power-plug.oga power-plug.oga.quiet
+sudo mv /usr/share/sounds/Yaru/stereo/power-unplug.oga power-unplug.oga.quiet
+sudo mv /usr/share/sounds/freedesktop/stereo/device-removed.oga device-removed.oga.quiet
+sudo mv /usr/share/sounds/freedesktop/stereo/device-added.oga device-added.oga.quiet
+    </pre
+      >
+      <button
+        onclick="copyCode('code_powerplug', this)"
+        style="position: absolute; top: 0; right: 0"
+      >
+        Copy
+      </button>
+    </div>
+
     <h2>Install hp-plugins (scanner, printer)</h2>
     <!-- Step 7 -->
     <div style="margin-bottom: 20px; position: relative">
