@@ -35,8 +35,8 @@ ssh-add ~/.ssh/id_ed25519</pre>
       </li>
 
       <li class="block">
-        <b>Copy key to server 192.168.50.6 (port 22)</b>
-        <pre id="code4">ssh-copy-id -i ~/.ssh/id_ed25519.pub ticon367@192.168.50.6</pre>
+        <b>Copy key to server 192.168.50.12 (port 22)</b>
+        <pre id="code4">ssh-copy-id -i ~/.ssh/id_ed25519.pub ticon367@192.168.50.12</pre>
         <button onclick="copyCode('code4', this)">Copy</button>
       </li>
 
@@ -48,7 +48,7 @@ ssh-add ~/.ssh/id_ed25519</pre>
 
       <li class="block">
         <b>Test SSH connection (server 6)</b>
-        <pre id="code6">ssh ticon367@192.168.50.6</pre>
+        <pre id="code6">ssh ticon367@192.168.50.12</pre>
         <button onclick="copyCode('code6', this)">Copy</button>
       </li>
 
@@ -67,7 +67,7 @@ ssh-add ~/.ssh/id_ed25519</pre>
     IdentityFile ~/.ssh/id_ed25519
 
 Host ha
-    HostName 192.168.50.6
+    HostName 192.168.50.12
     User ticon367
     Port 22
     IdentityFile ~/.ssh/id_ed25519</pre>
